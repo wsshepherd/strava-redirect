@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <head><meta charset="utf-8"></head>
-  <body>
-    <script>
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get('code');
-      if (code) {
-        // Redirect back into the app
-        window.location = `lfthvy://callback?code=${code}`;
-      } else {
-        document.body.textContent = "Error: no `code` in URL.";
-      }
-    </script>
-  </body>
-</html>
+<head><meta charset="utf-8"></head>
+<body>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  const scope = params.get('scope');
+  const state = params.get('state');
 
+  if (code) {
+    // Build redirect with everything Strava gave us
+    let redirect = `lfthvy://callback?code=${code}`;
+    if (scope) redirect += `&scope=${encodeURIComponent(scope)}`;
+    if (state) redirect += `&state=${encodeURIComponent(state)}`;
+    
+    window.location = redirect;
+  } else {
+    document.body.textContent = "❌ Error: No `code` parameter in URL.";
+  }
+</script>
+</body>
+</html>
